@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import Logo from './Logo';
 import './Header.css';
-import './Navigation.css';
 
 const whoWeAreItems = [
   { name: 'About Us', href: '#about' },
@@ -80,69 +79,78 @@ function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
 
-  const toggleDropdown = (name, e) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+  const toggleDropdown = (name) => {
     setOpenDropdown(openDropdown === name ? null : name);
   };
 
-  const closeMobileMenu = () => {
+  const closeAll = () => {
     setMobileMenuOpen(false);
+    setOpenDropdown(null);
   };
 
   return (
     <header className="header">
-      <div className="header-main">
-        <div className="header-brand">
-          <Logo className="header-logo" alt="School Logo" />
-          <div className="header-titles">
-            <h1 className="header-title-main">Nyapui Secondary School</h1>
-            <p className="header-title-sub">of Excellence for Girls</p>
-          </div>
+      <div className="header-brand">
+        <Logo className="header-logo" alt="School Logo" />
+        <div className="header-titles">
+          <h1 className="header-title-main">Nyapui Secondary School</h1>
+          <p className="header-title-sub">of Excellence for Girls</p>
         </div>
-        <button 
-          className="mobile-menu-btn"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          <span className={`hamburger ${mobileMenuOpen ? 'active' : ''}`}>
-            <span></span>
-            <span></span>
-            <span></span>
-          </span>
-        </button>
-        <nav className={`navigation ${mobileMenuOpen ? 'mobile-open' : ''}`}>
-          <ul className="nav-menu">
-            {menuItems.map((item) => (
-              <li key={item.name} className="nav-item">
-                {item.dropdown ? (
-                  <div className="dropdown">
-                    <a 
-                      href={item.href} 
-                      className="nav-link dropdown-trigger"
-                      onClick={(e) => toggleDropdown(item.name, e)}
-                    >
-                      {item.name}
-                      <span className={`dropdown-arrow ${openDropdown === item.name ? 'open' : ''}`}>▼</span>
-                    </a>
-                    <ul className={`dropdown-menu ${openDropdown === item.name ? 'show' : ''}`}>
+      </div>
+      
+      <button 
+        className="mobile-menu-btn"
+        onClick={toggleMobileMenu}
+        aria-label="Toggle menu"
+      >
+        <span className={`hamburger ${mobileMenuOpen ? 'active' : ''}`}>
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </button>
+
+      {mobileMenuOpen && (
+        <div className="mobile-overlay" onClick={closeAll}></div>
+      )}
+
+      <nav className={`navigation ${mobileMenuOpen ? 'mobile-open' : ''}`}>
+        <ul className="nav-menu">
+          {menuItems.map((item) => (
+            <li key={item.name} className="nav-item">
+              {item.dropdown ? (
+                <div className="dropdown">
+                  <button 
+                    type="button"
+                    className="nav-link dropdown-trigger"
+                    onClick={() => toggleDropdown(item.name)}
+                  >
+                    {item.name}
+                    <span className={`dropdown-arrow ${openDropdown === item.name ? 'open' : ''}`}>▼</span>
+                  </button>
+                  {openDropdown === item.name && (
+                    <ul className="dropdown-menu">
                       {item.dropdown.map((dropItem) => (
                         <li key={dropItem.name}>
-                          <a href={dropItem.href} className="dropdown-link" onClick={closeMobileMenu}>
+                          <a href={dropItem.href} className="dropdown-link" onClick={closeAll}>
                             {dropItem.name}
                           </a>
                         </li>
                       ))}
                     </ul>
-                  </div>
-                ) : (
-                  <a href={item.href} className="nav-link" onClick={closeMobileMenu}>{item.name}</a>
-                )}
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
+                  )}
+                </div>
+              ) : (
+                <a href={item.href} className="nav-link" onClick={closeAll}>{item.name}</a>
+              )}
+            </li>
+          ))}
+        </ul>
+      </nav>
     </header>
   );
 }
