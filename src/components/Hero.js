@@ -32,14 +32,6 @@ function Hero() {
     return () => clearInterval(timer);
   }, []);
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % heroImages.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + heroImages.length) % heroImages.length);
-  };
-
   return (
     <section className="hero">
       <div className="hero-slider">
@@ -48,10 +40,12 @@ function Hero() {
             key={slide.id} 
             className={`hero-slide ${index === currentSlide ? 'active' : ''}`}
           >
-            <div 
+            <img 
               className="hero-slide-bg" 
-              style={{ backgroundImage: `url(${process.env.PUBLIC_URL + '/' + slide.image})` }}
-            ></div>
+              src={process.env.PUBLIC_URL + '/' + slide.image}
+              alt=""
+              loading={index === 0 ? 'eager' : 'lazy'}
+            />
             <div className="hero-overlay"></div>
             <div className="hero-content">
               <h1 className="hero-title">{slide.title}</h1>
@@ -64,10 +58,10 @@ function Hero() {
           </div>
         ))}
         
-        <button className="hero-nav hero-prev" onClick={prevSlide}>
+        <button className="hero-nav hero-prev" onClick={() => setCurrentSlide((prev) => (prev - 1 + heroImages.length) % heroImages.length)} aria-label="Previous slide">
           &#10094;
         </button>
-        <button className="hero-nav hero-next" onClick={nextSlide}>
+        <button className="hero-nav hero-next" onClick={() => setCurrentSlide((prev) => (prev + 1) % heroImages.length)} aria-label="Next slide">
           &#10095;
         </button>
         
@@ -77,7 +71,8 @@ function Hero() {
               key={index}
               className={`hero-dot ${index === currentSlide ? 'active' : ''}`}
               onClick={() => setCurrentSlide(index)}
-            ></button>
+              aria-label={`Go to slide ${index + 1}`}
+            />
           ))}
         </div>
       </div>

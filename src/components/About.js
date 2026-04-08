@@ -1,16 +1,44 @@
+import { useEffect, useRef } from 'react';
 import './About.css';
 
 function About() {
+  const imageRef = useRef(null);
+  const contentRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            if (entry.target === imageRef.current) {
+              imageRef.current.classList.add('slide-in');
+            }
+            if (entry.target === contentRef.current) {
+              contentRef.current.classList.add('slide-in');
+            }
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    if (imageRef.current) observer.observe(imageRef.current);
+    if (contentRef.current) observer.observe(contentRef.current);
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section className="about" id="about">
       <div className="about-container">
-        <div className="about-image">
+        <div className="about-image" ref={imageRef}>
           <div className="about-image-wrapper">
             <div className="about-image-blob">
               <div className="about-image-inner">
                 <img 
-                  src={`${process.env.PUBLIC_URL}/about.jpg`} 
-                  alt="About Nyapui Secondary School" 
+                  src={process.env.PUBLIC_URL + '/about.jpg'}
+                  alt="About Nyapui Secondary School"
+                  loading="lazy"
                 />
               </div>
             </div>
@@ -18,7 +46,7 @@ function About() {
             <div className="about-image-line"></div>
           </div>
         </div>
-        <div className="about-content">
+        <div className="about-content" ref={contentRef}>
           <h2 className="about-title">About Our School</h2>
           
           <div className="about-section">
