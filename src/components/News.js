@@ -7,6 +7,7 @@ const newsItems = [
     category: 'Announcement',
     date: 'April 5, 2026',
     title: 'School Opens for Second Term',
+    image: 'news1.jpg',
     description: 'We are pleased to announce that the second term commences on April 15, 2026. All students are expected to report on time.'
   },
   {
@@ -14,6 +15,7 @@ const newsItems = [
     category: 'Event',
     date: 'April 20, 2026',
     title: 'Annual Science Fair 2026',
+    image: 'news2.jpg',
     description: 'Join us for our annual science fair showcasing innovative STEM projects from our talented students.'
   },
   {
@@ -21,6 +23,7 @@ const newsItems = [
     category: 'News',
     date: 'April 1, 2026',
     title: 'National Science Competition Winners',
+    image: 'news3.jpg',
     description: 'Congratulations to our students who won top honors in the National Science Competition.'
   },
   {
@@ -28,6 +31,7 @@ const newsItems = [
     category: 'Announcement',
     date: 'March 28, 2026',
     title: 'STEM Workshop for Parents',
+    image: 'news4.jpg',
     description: 'A workshop for parents on supporting STEM education at home will be held on April 10.'
   }
 ];
@@ -90,8 +94,9 @@ function News() {
               <div 
                 className={`news-card ${visible ? 'jump-in' : ''}`} 
                 key={item.id}
-                style={{ animationDelay: visible ? `${index * 0.15}s` : '0s' }}
+                style={{ transitionDelay: visible ? `${index * 0.15}s` : '0s' }}
               >
+                {item.image && <img src={process.env.PUBLIC_URL + '/' + item.image} alt="" className="news-thumb" />}
                 <span className={`news-category ${item.category.toLowerCase()}`}>{item.category}</span>
                 <p className="news-date">{item.date}</p>
                 <h3 className="news-card-title">{item.title}</h3>
